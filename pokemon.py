@@ -79,18 +79,19 @@ class Trainer:
             print("You have no Pokemons to battle with!")
             return
 
-        print("Choose a Pokemon to battle with:")
-        for idx, pokemon in enumerate(self.pokemons):
-            print(f"{idx + 1}. {pokemon}")
+        while True:
+            print("Choose a Pokemon to battle with:")
+            for idx, pokemon in enumerate(self.pokemons):
+                print(f"{idx + 1}. {pokemon}")
 
-        try:
-            choice = int(input("Enter the number of the Pokemon you want to use: ")) - 1
-            if choice < 0 or choice >= len(self.pokemons):
-                print("Invalid choice!")
-            return
-        except ValueError:
-            print("Invalid input! Please enter a number.")
-            return
+            try:
+                choice = int(input("Enter the number of the Pokemon you want to use: ")) - 1
+                if 0 <= choice < len(self.pokemons):
+                    break
+                else:
+                    print("Invalid choice! Please enter a valid number.")
+            except ValueError:
+                print("Invalid input! Please enter a number.")
 
         my_pokemon = self.pokemons[choice]
         print(f"{my_pokemon.name} is battling {wild_pokemon.name}!")
@@ -133,7 +134,7 @@ def main():
     trainer = Trainer(trainer_name)
 
     wild_pokemons = [
-      Pokemon("Bulbasaur", 45, 0.3, evolution={'name': 'Ivysaur', 'level': 16, 'hp_increase': 25}, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Vine Whip', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Bulbasaur", 45, 0.3, evolution={'name': 'Ivysaur', 'level': 16, 'hp_increase': 25}, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Vine Whip', 'min_damage': 10, 'max_damage': 15}]),
         Pokemon("Charmander", 39, 0.4, evolution={'name': 'Charmeleon', 'level': 16, 'hp_increase': 30}, moves=[{'name': 'Scratch', 'min_damage': 5, 'max_damage': 10}, {'name': 'Ember', 'min_damage': 10, 'max_damage': 15}]),
         Pokemon("Squirtle", 44, 0.3, evolution={'name': 'Wartortle', 'level': 16, 'hp_increase': 25}, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}]),
         Pokemon("Caterpie", 45, 0.2, evolution={'name': 'Metapod', 'level': 7, 'hp_increase': 20}, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}]),
@@ -186,6 +187,31 @@ def main():
         Pokemon("Rhyhorn", 80, 0.3, evolution={'name': 'Rhydon', 'level': 42, 'hp_increase': 40}, moves=[{'name': 'Horn Attack', 'min_damage': 10, 'max_damage': 15}, {'name': 'Stomp', 'min_damage': 10, 'max_damage': 15}]),
         Pokemon("Chansey", 250, 0.2, evolution={'name': 'Blissey', 'level': 42, 'hp_increase': 40}, moves=[{'name': 'Pound', 'min_damage': 5, 'max_damage': 10}, {'name': 'Double Slap', 'min_damage': 10, 'max_damage': 15}]),
         Pokemon("Tangela", 65, 0.3, evolution=None, moves=[{'name': 'Vine Whip', 'min_damage': 10, 'max_damage': 15}, {'name': 'Absorb', 'min_damage': 5, 'max_damage': 10}]),
+        Pokemon("Horsea", 30, 0.3, evolution={'name': 'Seadra', 'level': 32, 'hp_increase': 30}, moves=[{'name': 'Bubble', 'min_damage': 5, 'max_damage': 10}, {'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Goldeen", 45, 0.3, evolution={'name': 'Seaking', 'level': 33, 'hp_increase': 30}, moves=[{'name': 'Peck', 'min_damage': 5, 'max_damage': 10}, {'name': 'Horn Attack', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Staryu", 30, 0.3, evolution={'name': 'Starmie', 'level': 36, 'hp_increase': 30}, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Mr. Mime", 40, 0.3, evolution=None, moves=[{'name': 'Confusion', 'min_damage': 10, 'max_damage': 15}, {'name': 'Barrier', 'min_damage': 0, 'max_damage': 0}]),
+        Pokemon("Scyther", 70, 0.3, evolution=None, moves=[{'name': 'Quick Attack', 'min_damage': 10, 'max_damage': 15}, {'name': 'Slash', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Jynx", 65, 0.3, evolution=None, moves=[{'name': 'Pound', 'min_damage': 5, 'max_damage': 10}, {'name': 'Ice Punch', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Electabuzz", 65, 0.3, evolution=None, moves=[{'name': 'Thunder Punch', 'min_damage': 10, 'max_damage': 15}, {'name': 'Quick Attack', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Magmar", 65, 0.3, evolution=None, moves=[{'name': 'Fire Punch', 'min_damage': 10, 'max_damage': 15}, {'name': 'Ember', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Pinsir", 65, 0.3, evolution=None, moves=[{'name': 'Vice Grip', 'min_damage': 10, 'max_damage': 15}, {'name': 'Seismic Toss', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Tauros", 75, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Horn Attack', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Magikarp", 20, 0.5, evolution={'name': 'Gyarados', 'level': 20, 'hp_increase': 40}, moves=[{'name': 'Splash', 'min_damage': 0, 'max_damage': 0}, {'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}]),
+        Pokemon("Lapras", 130, 0.2, evolution=None, moves=[{'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}, {'name': 'Ice Beam', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Ditto", 48, 0.3, evolution=None, moves=[{'name': 'Transform', 'min_damage': 0, 'max_damage': 0}]),
+        Pokemon("Eevee", 55, 0.3, evolution={'name': 'Vaporeon', 'level': 25, 'hp_increase': 30}, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Quick Attack', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Porygon", 65, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Psybeam', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Omanyte", 35, 0.3, evolution={'name': 'Omastar', 'level': 40, 'hp_increase': 30}, moves=[{'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}, {'name': 'Bite', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Kabuto", 30, 0.3, evolution={'name': 'Kabutops', 'level': 40, 'hp_increase': 30}, moves=[{'name': 'Scratch', 'min_damage': 5, 'max_damage': 10}, {'name': 'Absorb', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Aerodactyl", 80, 0.3, evolution=None, moves=[{'name': 'Wing Attack', 'min_damage': 10, 'max_damage': 15}, {'name': 'Bite', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Snorlax", 160, 0.2, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Body Slam', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Articuno", 90, 0.1, evolution=None, moves=[{'name': 'Ice Beam', 'min_damage': 10, 'max_damage': 15}, {'name': 'Blizzard', 'min_damage': 15, 'max_damage': 20}]),
+        Pokemon("Zapdos", 90, 0.1, evolution=None, moves=[{'name': 'Thunder Shock', 'min_damage': 10, 'max_damage': 15}, {'name': 'Drill Peck', 'min_damage': 15, 'max_damage': 20}]),
+        Pokemon("Moltres", 90, 0.1, evolution=None, moves=[{'name': 'Ember', 'min_damage': 10, 'max_damage': 15}, {'name': 'Fire Blast', 'min_damage': 15, 'max_damage': 20}]),
+        Pokemon("Dratini", 41, 0.3, evolution={'name': 'Dragonair', 'level': 30, 'hp_increase': 30}, moves=[{'name': 'Wrap', 'min_damage': 5, 'max_damage': 10}, {'name': 'Dragon Rage', 'min_damage': 10, 'max_damage': 15}]),
+        Pokemon("Mewtwo", 106, 0.1, evolution=None, moves=[{'name': 'Confusion', 'min_damage': 10, 'max_damage': 15}, {'name': 'Psychic', 'min_damage': 15, 'max_damage': 20}]),
+        Pokemon("Mew", 100, 0.1, evolution=None, moves=[{'name': 'Pound', 'min_damage': 5, 'max_damage': 10}, {'name': 'Psychic', 'min_damage': 15, 'max_damage': 20}])
     ]
 
     while True:
