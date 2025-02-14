@@ -60,6 +60,7 @@ class Trainer:
             print(f"{self.name} caught a {pokemon.name}!")
         else:
             print(f"{pokemon.name} escaped!")
+
     def show_pokemons(self):
         if self.pokemons:
             print(f"{self.name}'s Pokemons:")
@@ -128,6 +129,75 @@ class Trainer:
                 print("Invalid action. Please choose again.")
 
         self.heal_pokemons()
+
+    def battle_gym_leader(self, gym_leader):
+        if not self.pokemons:
+            print("You have no Pokemons to battle with!")
+            return
+
+        print(f"{self.name} is challenging Gym Leader {gym_leader.name}!")
+
+        for gym_pokemon in gym_leader.pokemons:
+            if not self.pokemons:
+                print("You have no Pokemons left to battle with!")
+                return
+
+            while True:
+                print("Choose a Pokemon to battle with:")
+                for idx, pokemon in enumerate(self.pokemons):
+                    print(f"{idx + 1}. {pokemon}")
+
+                try:
+                    choice = int(input("Enter the number of the Pokemon you want to use: ")) - 1
+                    if 0 <= choice < len(self.pokemons):
+                        break
+                    else:
+                        print("Invalid choice! Please enter a valid number.")
+                except ValueError:
+                    print("Invalid input! Please enter a number.")
+
+            my_pokemon = self.pokemons[choice]
+            print(f"{my_pokemon.name} is battling {gym_pokemon.name}!")
+
+            while my_pokemon.hp > 0 and gym_pokemon.hp > 0:
+                action = input(f"Do you want {my_pokemon.name} to (a)ttack, (u)se a special move, or (r)un away? ").lower()
+                if action == 'a':
+                    if my_pokemon.attack(gym_pokemon):
+                        my_pokemon.gain_exp(990)
+                        break
+                    if gym_pokemon.attack(my_pokemon):
+                        print(f"{my_pokemon.name} lost the battle!")
+                        self.pokemons.remove(my_pokemon)
+                        break
+                elif action == 'u':
+                    if not my_pokemon.moves:
+                        print(f"{my_pokemon.name} has no special moves to use!")
+                    else:
+                        move = random.choice(my_pokemon.moves)
+                        damage = random.randint(move['min_damage'], move['max_damage']) * 1.5  # Special move does more damage
+                        gym_pokemon.hp -= damage
+                        print(f"{my_pokemon.name} uses special move {move['name']} and attacks {gym_pokemon.name} for {damage} damage!")
+                        if gym_pokemon.hp <= 0:
+                            print(f"{gym_pokemon.name} fainted!")
+                            my_pokemon.gain_exp(990)
+                            break
+                        if gym_pokemon.attack(my_pokemon):
+                            print(f"{my_pokemon.name} died in the battle!")
+                            self.pokemons.remove(my_pokemon)
+                            break
+                elif action == 'r':
+                    print(f"{my_pokemon.name} ran away!")
+                    return
+                else:
+                    print("Invalid action. Please choose again.")
+
+        print(f"{self.name} defeated Gym Leader {gym_leader.name}!")
+        self.heal_pokemons()
+
+class GymLeader:
+    def __init__(self, name, pokemons):
+        self.name = name
+        self.pokemons = pokemons
 
 def main():
     trainer_name = input("Enter your name: ")
@@ -214,8 +284,54 @@ def main():
         Pokemon("Mew", 100, 0.1, evolution=None, moves=[{'name': 'Pound', 'min_damage': 5, 'max_damage': 10}, {'name': 'Psychic', 'min_damage': 15, 'max_damage': 20}])
     ]
 
+    gym_leaders = [
+        GymLeader("Brock", [
+            Pokemon("Geodude", 40, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Rock Throw', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Onix", 35, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Rock Throw', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Misty", [
+            Pokemon("Staryu", 30, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Starmie", 60, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Water Gun', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Lt. Surge", [
+            Pokemon("Voltorb", 40, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Spark', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Pikachu", 35, 0.4, evolution=None, moves=[{'name': 'Thunder Shock', 'min_damage': 10, 'max_damage': 15}, {'name': 'Quick Attack', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Raichu", 60, 0.3, evolution=None, moves=[{'name': 'Thunder Shock', 'min_damage': 10, 'max_damage': 15}, {'name': 'Quick Attack', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Erika", [
+            Pokemon("Tangela", 65, 0.3, evolution=None, moves=[{'name': 'Vine Whip', 'min_damage': 10, 'max_damage': 15}, {'name': 'Absorb', 'min_damage': 5, 'max_damage': 10}]),
+            Pokemon("Weepinbell", 50, 0.3, evolution=None, moves=[{'name': 'Vine Whip', 'min_damage': 10, 'max_damage': 15}, {'name': 'Acid', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Gloom", 45, 0.3, evolution=None, moves=[{'name': 'Absorb', 'min_damage': 5, 'max_damage': 10}, {'name': 'Acid', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Koga", [
+            Pokemon("Koffing", 40, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Sludge', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Muk", 80, 0.3, evolution=None, moves=[{'name': 'Pound', 'min_damage': 5, 'max_damage': 10}, {'name': 'Sludge', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Koffing", 40, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Sludge', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Weezing", 65, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Sludge', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Sabrina", [
+            Pokemon("Kadabra", 40, 0.3, evolution=None, moves=[{'name': 'Confusion', 'min_damage': 10, 'max_damage': 15}, {'name': 'Psybeam', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Mr. Mime", 40, 0.3, evolution=None, moves=[{'name': 'Confusion', 'min_damage': 10, 'max_damage': 15}, {'name': 'Barrier', 'min_damage': 0, 'max_damage': 0}]),
+            Pokemon("Venomoth", 60, 0.3, evolution=None, moves=[{'name': 'Tackle', 'min_damage': 5, 'max_damage': 10}, {'name': 'Poison Powder', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Alakazam", 55, 0.3, evolution=None, moves=[{'name': 'Confusion', 'min_damage': 10, 'max_damage': 15}, {'name': 'Psybeam', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Blaine", [
+            Pokemon("Growlithe", 55, 0.3, evolution=None, moves=[{'name': 'Bite', 'min_damage': 10, 'max_damage': 15}, {'name': 'Ember', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Ponyta", 50, 0.3, evolution=None, moves=[{'name': 'Ember', 'min_damage': 10, 'max_damage': 15}, {'name': 'Stomp', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Rapidash", 65, 0.3, evolution=None, moves=[{'name': 'Ember', 'min_damage': 10, 'max_damage': 15}, {'name': 'Stomp', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Arcanine", 90, 0.3, evolution=None, moves=[{'name': 'Bite', 'min_damage': 10, 'max_damage': 15}, {'name': 'Ember', 'min_damage': 10, 'max_damage': 15}])
+        ]),
+        GymLeader("Giovanni", [
+            Pokemon("Rhyhorn", 80, 0.3, evolution=None, moves=[{'name': 'Horn Attack', 'min_damage': 10, 'max_damage': 15}, {'name': 'Stomp', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Dugtrio", 35, 0.3, evolution=None, moves=[{'name': 'Scratch', 'min_damage': 5, 'max_damage': 10}, {'name': 'Mud-Slap', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Nidoqueen", 90, 0.3, evolution=None, moves=[{'name': 'Scratch', 'min_damage': 5, 'max_damage': 10}, {'name': 'Double Kick', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Nidoking", 90, 0.3, evolution=None, moves=[{'name': 'Peck', 'min_damage': 5, 'max_damage': 10}, {'name': 'Double Kick', 'min_damage': 10, 'max_damage': 15}]),
+            Pokemon("Rhydon", 105, 0.3, evolution=None, moves=[{'name': 'Horn Attack', 'min_damage': 10, 'max_damage': 15}, {'name': 'Stomp', 'min_damage': 10, 'max_damage': 15}])
+        ])
+    ]
+
     while True:
-        action = input("Do you want to (c)atch a Pokemon, (s)how your Pokemons, or (b)attle? (q to quit): ").lower()
+        action = input("Do you want to (c)atch a Pokemon, (s)how your Pokemons, (b)attle, or (g)ym battle? (q to quit): ").lower()
         if action == 'c':
             wild_pokemon = random.choice(wild_pokemons)
             print(f"A wild {wild_pokemon.name} appeared!")
@@ -230,6 +346,18 @@ def main():
             wild_pokemon = random.choice(wild_pokemons)
             print(f"A wild {wild_pokemon.name} appeared!")
             trainer.battle(wild_pokemon)
+        elif action == 'g':
+            print("Choose a Gym Leader to battle:")
+            for idx, gym_leader in enumerate(gym_leaders):
+                print(f"{idx + 1}. {gym_leader.name}")
+            try:
+                choice = int(input("Enter the number of the Gym Leader you want to battle: ")) - 1
+                if 0 <= choice < len(gym_leaders):
+                    trainer.battle_gym_leader(gym_leaders[choice])
+                else:
+                    print("Invalid choice! Please enter a valid number.")
+            except ValueError:
+                print("Invalid input! Please enter a number.")
         elif action == 'q':
             break
         else:
