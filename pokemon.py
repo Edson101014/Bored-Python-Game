@@ -16,12 +16,12 @@ class Pokemon:
 
     def gain_exp(self, amount):
         self.exp += amount
-        if self.exp >= 100:
+        while self.exp >= 100:
+            self.exp -= 100
             self.level_up()
 
     def level_up(self):
         self.level += 1
-        self.exp = 0
         self.hp += 10
         self.max_hp += 10
         print(f"{self.name} leveled up to level {self.level}!")
@@ -60,12 +60,12 @@ class Trainer:
             print(f"{self.name} caught a {pokemon.name}!")
         else:
             print(f"{pokemon.name} escaped!")
-
     def show_pokemons(self):
         if self.pokemons:
             print(f"{self.name}'s Pokemons:")
             for pokemon in self.pokemons:
-                print(pokemon)
+                evolution_info = f", Evolves at Level: {pokemon.evolution['level']}" if pokemon.evolution else ""
+                print(f"{pokemon}{evolution_info}")
         else:
             print(f"{self.name} has no Pokemons.")
 
@@ -79,7 +79,20 @@ class Trainer:
             print("You have no Pokemons to battle with!")
             return
 
-        my_pokemon = random.choice(self.pokemons)
+        print("Choose a Pokemon to battle with:")
+        for idx, pokemon in enumerate(self.pokemons):
+            print(f"{idx + 1}. {pokemon}")
+
+        try:
+            choice = int(input("Enter the number of the Pokemon you want to use: ")) - 1
+            if choice < 0 or choice >= len(self.pokemons):
+                print("Invalid choice!")
+            return
+        except ValueError:
+            print("Invalid input! Please enter a number.")
+            return
+
+        my_pokemon = self.pokemons[choice]
         print(f"{my_pokemon.name} is battling {wild_pokemon.name}!")
 
         while my_pokemon.hp > 0 and wild_pokemon.hp > 0:
